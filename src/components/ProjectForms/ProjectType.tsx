@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/select"
 import { Label } from "../ui/label"
 import { Checkbox } from "../ui/checkbox"
+import { useState } from "react"
 
 function ProjectType() {
+    const [fee , setFee] =useState(1)
     return (
         <div>
             <CardHeader className="w-full text-center font-semibold font-roboto">
@@ -23,9 +25,9 @@ function ProjectType() {
             <CardContent >
                 <form >
                     <div className=" border text-sm cursor-pointer font-semibold rounded-lg  text-center flex">
-                        <p className="w-full bg-blue-500 rounded-l-lg text-white p-2">Time & Material</p>
-                        <p className="w-full border-x p-2">Fixed Fee</p>
-                        <p className="w-full rounded-r-lg p-2">Non-Billable</p>
+                        <p className={`w-full ${fee ===1 &&  'bg-blue-500 text-white'}  rounded-l-lg  p-2`} onClick={()=>setFee(1)}>Time & Material</p>
+                        <p className={`w-full ${fee ===2 &&  'bg-blue-500 text-white'} border-x   p-2`} onClick={()=>setFee(2)}>Fixed Fee</p>
+                        <p className={`w-full ${fee ===3 &&  'bg-blue-500 text-white'}  rounded-r-lg  p-2`} onClick={()=>setFee(3)}>Non-Billable</p>
                     </div>
                     <div className="grid w-full items-center gap-4 mt-4">
                         <div>
@@ -62,7 +64,7 @@ function ProjectType() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center mt-2 space-x-2">
                             <Checkbox id="terms" />
                             <Label
                                 htmlFor="terms"
