@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {CardForm} from './components/CardForm'
 
 function App() {
