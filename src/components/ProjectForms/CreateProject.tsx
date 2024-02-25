@@ -111,7 +111,7 @@ function CreateProject({ setFormSlide }: any) {
             </CardHeader>
             <CardContent >
                 <form>
-                    <div className="grid w-full items-center md:space-y-4 space-y-7">
+                    <div className="grid w-full items-center md:space-y-2 space-y-6">
                         <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="name">Name</Label>
                             <Input required id="name" value={formData.name} onChange={handleInputChange} name="name" placeholder="Enter the project name here" />

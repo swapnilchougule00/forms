@@ -79,7 +79,7 @@ function ProjectType({ setFormSlide }:any) {
                         <p className={`w-full ${fee == 2 && 'bg-blue-500 text-white'} border-x items-center justify-center flex  p-2`} onClick={() => setFee(2)}>Fixed Fee</p>
                         <p className={`w-full ${fee == 3 && 'bg-blue-500 text-white'}  rounded-r-lg items-center justify-center flex  p-2`} onClick={() => setFee(3)}>Non-Billable</p>
                     </div>
-                    <div className="grid w-full items-center gap-4 mt-4">
+                    <div className="grid w-full items-center md:gap-1 gap-3 mt-4">
                         <div>
                             <Label htmlFor="hours">Hourly</Label>
                             <p className="text-sm text-slate-500">We need hourly rates to track your project's billable amount </p>
@@ -131,7 +131,7 @@ function ProjectType({ setFormSlide }:any) {
                                 Budget resets every month
                             </Label>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center mt-2 space-x-2">
                             <input type="checkbox" id="email" name="checkEmail" checked={typeData.checkEmail} onChange={handleInputChange} />
                             <Label
                                 htmlFor="email"
