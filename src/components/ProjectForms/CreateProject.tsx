@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/popover"
 
 
-
 function CreateProject({ setFormSlide }: any) {
 
     const [startDate, setStartDate] = React.useState<Date>()
@@ -63,16 +62,16 @@ function CreateProject({ setFormSlide }: any) {
         if (!formData.name.trim()) {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
-                name: 'Error message for the name field',
+                name: "Name field can't be empty",
             }))
             isValid = false;
         }
 
-        if (!formData.client.trim()) {
+        if (!formData.client.trim() || formData.client === '') {
             console.log(formData)
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
-                client: 'Client message for the name field',
+                client: "Client field can't be empty",
             }))
             isValid = false;
         }
@@ -80,7 +79,7 @@ function CreateProject({ setFormSlide }: any) {
         if (!startDate || !endDate) {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
-                date: 'date message for the name field',
+                date: "Date field can't be empty",
             }))
             isValid = false;
         }
@@ -89,7 +88,7 @@ function CreateProject({ setFormSlide }: any) {
         if (start > end) {
             setFormErrors((prevErrors) => ({
                 ...prevErrors,
-                date: 'date message for the name field',
+                date: 'Start date cannot be higher than end date',
             }))
             isValid = false;
         }
@@ -112,7 +111,7 @@ function CreateProject({ setFormSlide }: any) {
             </CardHeader>
             <CardContent >
                 <form>
-                    <div className="grid w-full items-center space-y-4">
+                    <div className="grid w-full items-center md:space-y-4 space-y-7">
                         <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="name">Name</Label>
                             <Input required id="name" value={formData.name} onChange={handleInputChange} name="name" placeholder="Enter the project name here" />
@@ -129,10 +128,9 @@ function CreateProject({ setFormSlide }: any) {
                                     onChange={handleInputChange}
                                 >
                                     <option value="">Select a client</option>
-                                    <option value="next">Next.js</option>
-                                    <option value="sveltekit">SvelteKit</option>
-                                    <option value="astro">Astro</option>
-                                    <option value="nuxt">Nuxt.js</option>
+                                    <option value="1">Client 1</option>
+                                    <option value="2">Client 2</option>
+                                    <option value="3">Client 3</option>
                                 </select>
                                 <p className="text-gray-500 text-sm">Or</p>
                                 <Button disabled className="bg-white text-slate-400 gap-2 border hover:bg-white"> <Plus className="w-4" /> New client</Button>
@@ -154,7 +152,7 @@ function CreateProject({ setFormSlide }: any) {
                                             )}
                                         >
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+                                            {startDate ? format(startDate, 'MMM dd, yyyy') : <span>Pick a date</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">
@@ -177,7 +175,7 @@ function CreateProject({ setFormSlide }: any) {
                                             )}
                                         >
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                                            {endDate ? format(endDate, 'MMM dd, yyyy') : <span>Pick a date</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start">

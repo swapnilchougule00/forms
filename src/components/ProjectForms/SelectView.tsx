@@ -13,7 +13,7 @@ function SelectView({setFormSlide}:any) {
         savedView && setView(savedView)
     },[])
 
-    const handleBack = () => { 
+    const handleBack = () => { localStorage.setItem('view' ,view);
          setFormSlide(2) }
     const handleNext = () => { localStorage.setItem('view' ,view); setFormSlide(4) }
 

@@ -16,7 +16,7 @@ export function CardForm() {
   const [formSlide, setFormSlide] = useState(1)
 
   return (
-    <Card className="lg:w-[35%] md:w[70%] w-[90%]  shadow-lg p-4 h-[70%]  md:h-[90%] relative">
+    <Card className="lg:w-[35%] md:w[70%] w-[90%]  shadow-lg p-4 h-[90%] relative">
       <X className="absolute right-2 top-2" />
       {formSlide == 1 && <CreateProject setFormSlide={setFormSlide}/>}
       {formSlide == 2 && <ProjectType setFormSlide={setFormSlide} />}

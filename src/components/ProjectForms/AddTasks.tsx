@@ -1,21 +1,35 @@
 //@ts-nocheck
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { X } from "lucide-react";
 
 
-function AddTasks({ setFormSlide }: any) {
-    const handleBack = () => { setFormSlide(4) }
-    const handleNext = () => { setFormSlide(5) }
+function AddTasks({ setFormSlide }) {
+    const values = [
+        { text: 'Marketing Website Design', checked: false },
+        { text: 'Branding Design', checked: false },
+        { text: 'UI/UX Fundamentals', checked: true },
+        { text: 'Wireframe and Prototyping', checked: false },
+        { text: 'Style Guide', checked: false },
+        { text: 'Layout Design', checked: false },
+    ]
+    const handleBack = () => { localStorage.setItem('tasks', JSON.stringify(tasks)); setFormSlide(4) }
+    const handleNext = () => { localStorage.setItem('tasks', JSON.stringify(tasks)); setFormSlide(5) }
 
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState(values);
     const [newTask, setNewTask] = useState('');
 
     const handleInputChange = (e) => {
         setNewTask(e.target.value);
     };
+
+    useEffect(() => {
+        const savedTasks = localStorage.getItem('tasks')
+        savedTasks && setTasks(JSON.parse(savedTasks))
+    }, [])
 
     const addTask = () => {
         if (newTask.trim() !== '') {
@@ -46,26 +60,28 @@ function AddTasks({ setFormSlide }: any) {
             <CardContent className="flex flex-col mt-4 md:mt-0 font-semibold text-slate-400 gap-4">
                 <Label className="text-black">Tasks</Label>
                 <div className="flex gap-4">
-                    <Input
-                    type="text"
-                    id="newTask"
-                    value={newTask}
-                    onChange={handleInputChange}
-                    placeholder="Add new tasks" />
-                    <Button onClick={addTask} className="bg-blue-500 hover:bg-blue-600 text-white">Add</Button>
+                    <Input className="focus:outline focus:outline-blue-400"
+                        type="text"
+                        id="newTask"
+                        value={newTask}
+                        onChange={handleInputChange}
+                        placeholder="Add new tasks" />
+                    <Button onClick={addTask} className="bg-blue-500  hover:bg-blue-600 text-white">Add</Button>
                 </div>
-                <ul>
+                <ul className="h-[300px] md:h-[300px] space-y-1 overflow-y-scroll overflow-hidden">
                     {tasks.map((task, index) => (
-                        <li key={index}>
-                            <input
-                                type="checkbox"
-                                checked={task.checked}
-                                onChange={() => toggleTask(index)}
-                            />
-                            <span style={{ textDecoration: task.checked ? 'line-through' : 'none' }}>
-                                {task.text}
-                            </span>
-                            <button onClick={() => deleteTask(index)}>Delete</button>
+                        <li key={index} className="border-b p-2 flex text-slate-600 items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <input
+                                    type="checkbox"
+                                    checked={task.checked}
+                                    onChange={() => toggleTask(index)}
+                                />
+                                <span>
+                                    {task.text}
+                                </span>
+                            </div>
+                            <button onClick={() => deleteTask(index)}> <X className="w-4" /> </button>
                         </li>
                     ))}
                 </ul>

@@ -2,23 +2,69 @@ import {
     CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Label } from "../ui/label"
-import { Checkbox } from "../ui/checkbox"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 
-function ProjectType({setFormSlide}:any) {
-    const [fee , setFee] =useState(1)
-    
+function ProjectType({ setFormSlide }:any) {
+    const [fee, setFee] = useState(1)
+    const [typeData, setTypeData] = useState({
+        fee: fee,
+        hours: '',
+        hoursor: '',
+        budget: '',
+        checkBudget: false,
+        checkEmail: false
+    })
+
+    const [typeErrors , setTypeErrors] =useState({
+        hoursError:'',
+        budgetError:''
+    })
+
+    useEffect(() => {
+        const savedTypeData = localStorage.getItem('typeData');
+        console.log(savedTypeData)
+        if (savedTypeData) {
+            setTypeData(JSON.parse(savedTypeData));
+        }
+    }, []);
+
+    const handleInputChange = (e: any) => {
+        const { name, value } = e.target;
+
+        setTypeData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     const handleBack = () => { setFormSlide(1) }
-    const handleNext = () => { setFormSlide(3) }
+    const handleNext = () => {
+        let isValid =true
+
+        if(typeData.hours === ''){
+            setTypeErrors((prevErrors) => ({
+                ...prevErrors,
+                hoursError: "Please select hours field",
+            }))
+            isValid = false;
+        }
+
+        if(typeData.budget === ''){
+            setTypeErrors((prevErrors) => ({
+                ...prevErrors,
+                budgetError: "Please select budget field",
+            }))
+            isValid = false;
+        }
+
+        if (isValid) {
+            localStorage.setItem('typeData', JSON.stringify(typeData));
+            setFormSlide(3)
+        }
+    }
+
     return (
         <div>
             <CardHeader className="w-full text-center font-semibold font-roboto">
@@ -29,47 +75,56 @@ function ProjectType({setFormSlide}:any) {
             <CardContent >
                 <form >
                     <div className=" border md:text-sm cursor-pointer font-semibold rounded-lg text-xs  text-center flex">
-                        <p className={`w-full ${fee ===1 &&  'bg-blue-500 text-white'}  rounded-l-lg items-center justify-center flex  p-2`} onClick={()=>setFee(1)}>Time & Material</p>
-                        <p className={`w-full ${fee ===2 &&  'bg-blue-500 text-white'} border-x items-center justify-center flex  p-2`} onClick={()=>setFee(2)}>Fixed Fee</p>
-                        <p className={`w-full ${fee ===3 &&  'bg-blue-500 text-white'}  rounded-r-lg items-center justify-center flex  p-2`} onClick={()=>setFee(3)}>Non-Billable</p>
+                        <p className={`w-full ${fee == 1 && 'bg-blue-500 text-white'}  rounded-l-lg items-center justify-center flex  p-2`} onClick={() => setFee(1)}>Time & Material</p>
+                        <p className={`w-full ${fee == 2 && 'bg-blue-500 text-white'} border-x items-center justify-center flex  p-2`} onClick={() => setFee(2)}>Fixed Fee</p>
+                        <p className={`w-full ${fee == 3 && 'bg-blue-500 text-white'}  rounded-r-lg items-center justify-center flex  p-2`} onClick={() => setFee(3)}>Non-Billable</p>
                     </div>
                     <div className="grid w-full items-center gap-4 mt-4">
                         <div>
-                            <Label htmlFor="client">Hourly</Label>
+                            <Label htmlFor="hours">Hourly</Label>
                             <p className="text-sm text-slate-500">We need hourly rates to track your project's billable amount </p>
                         </div>
                         <div className="flex justify-center w-full md:w-[80%] gap-2 items-center ">
-                            <Select>
-                                <SelectTrigger id="client">
-                                    <SelectValue placeholder="Select " />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    <SelectItem value="hourly">project hourly rate</SelectItem>
-                                    <SelectItem value="daily">project daily rate</SelectItem>
-                                    <SelectItem value="monthly">project monthly rate</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <select
+                                className="w-full border p-1.5 rounded-md"
+                                id="hours"
+                                name="hours"
+                                value={typeData.hours}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Select</option>
+                                <option value="hourly">project hourly rate</option>
+                                <option value="daily">project daily rate</option>
+                                <option value="monthly">project monthly rate</option>
+                            </select>
+
                             <p className="text-gray-500 text-sm">Or</p>
-                            <Input id="client" className="w-[40%]" placeholder="₹ 1000" />
+                            <Input id="hoursor" name="hoursor" value={typeData.hoursor} onChange={handleInputChange} className="w-[40%]" placeholder="₹ 1000" />
                         </div>
+                        {typeErrors.hoursError && <p className="text-red-500 text-sm">{typeErrors.hoursError}</p>}
+
                         <div>
                             <Label htmlFor="client">Budget</Label>
                             <p className="text-sm text-slate-500">We need hourly rates to track your project's billable amount </p>
                         </div>
                         <div className="flex justify-center w-[60%] md:w-[50%] gap-2 items-center ">
-                            <Select>
-                                <SelectTrigger id="client">
-                                    <SelectValue placeholder="Select " />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    <SelectItem value="hours">Hours per person</SelectItem>
-                                    <SelectItem value="days">Days per person</SelectItem>
-                                    <SelectItem value="months">Months per person</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <select
+                                className="w-full border p-1.5 rounded-md"
+                                id="budget"
+                                name="budget"
+                                value={typeData.budget}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Select</option>
+                                <option value="hours">Hours per person</option>
+                                <option value="days">Days per person</option>
+                                <option value="months">Months per person</option>
+                            </select>
                         </div>
+                        {typeErrors.budgetError && <p className="text-red-500 text-sm">{typeErrors.budgetError}</p>}
+
                         <div className="flex items-center mt-2 text-xs space-x-2">
-                            <Checkbox id="budget" />
+                            <input type="checkbox" id="budget" name="checkBudget" checked={typeData.checkBudget} onChange={handleInputChange} />
                             <Label
                                 htmlFor="budget"
                                 className="text-sm text-slate-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -77,7 +132,7 @@ function ProjectType({setFormSlide}:any) {
                             </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="email" />
+                            <input type="checkbox" id="email" name="checkEmail" checked={typeData.checkEmail} onChange={handleInputChange} />
                             <Label
                                 htmlFor="email"
                                 className="text-sm text-slate-500 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
