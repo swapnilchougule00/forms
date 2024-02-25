@@ -2,39 +2,48 @@ import {
     CardContent, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { DatePicker } from "../ui/DatePicker"
+
 import { Textarea } from "../ui/textarea"
 import { Label } from "../ui/label"
 import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
+import * as React from "react"
+import { CalendarIcon, Plus } from "lucide-react"
+import { format } from "date-fns"
 
-function CreateProject({ setFormSlide }:any ) {
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
+
+
+function CreateProject({ setFormSlide }: any) {
+
+    const [startDate, setStartDate] = React.useState<Date>()
+    const [endDate, setEndDate] = React.useState<Date>()
     const [formData, setFormData] = useState({
         name: '',
         client: '',
-        startDate: '',
-        endDate: '',
     });
 
     const [formErrors, setFormErrors] = useState({
         name: '',
         client: '',
-        startDate: '',
-        endDate: '',
+        date: '',
     });
 
     useEffect(() => {
         const savedFormData = localStorage.getItem('formData');
+        const startDate = localStorage.getItem('startDate');
+        const endDate = localStorage.getItem('endDate');
         if (savedFormData) {
             setFormData(JSON.parse(savedFormData));
+            setStartDate(startDate)
+            setEndDate(endDate)
         }
     }, []);
 
@@ -67,8 +76,18 @@ function CreateProject({ setFormSlide }:any ) {
             isValid = false;
         }
 
-        if(isValid){
+        if (!startDate || !endDate) {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                date: 'date message for the name field',
+            }))
+            isValid = false;
+        }
+
+        if (isValid) {
             localStorage.setItem('formData', JSON.stringify(formData));
+            localStorage.setItem('startDate', startDate)
+            localStorage.setItem('endDate', endDate)
             setFormSlide(2)
         }
     }
@@ -92,19 +111,21 @@ function CreateProject({ setFormSlide }:any ) {
                         <div>
                             <Label htmlFor="client">Client</Label>
                             <div className="flex justify-center gap-2 items-center ">
-                                <Select>
-                                    <SelectTrigger name="client" value={formData.client} onChange={handleInputChange}  id="client">
-                                        <SelectValue  placeholder="Select a client" />
-                                    </SelectTrigger>
-                                    <SelectContent position="popper">
-                                        <SelectItem value="next">Next.js</SelectItem>
-                                        <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                                        <SelectItem value="astro">Astro</SelectItem>
-                                        <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <select
+                                    className="w-full border p-1.5 rounded-md"
+                                    id="client"
+                                    name="client"
+                                    value={formData.client}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="">Select a client</option>
+                                    <option value="next">Next.js</option>
+                                    <option value="sveltekit">SvelteKit</option>
+                                    <option value="astro">Astro</option>
+                                    <option value="nuxt">Nuxt.js</option>
+                                </select>
                                 <p className="text-gray-500 text-sm">Or</p>
-                                <Input id="client" name="client" value={formData.client} onChange={handleInputChange}  className="w-[40%]" placeholder="New client" />
+                                <Button onClick={(e) => e.preventDefault()} className="bg-white text-slate-400 gap-2 border hover:bg-white"> <Plus className="w-4" /> New client</Button>
                             </div>
                             {formErrors.client && <p className="text-red-500 text-sm">{formErrors.client}</p>}
 
@@ -113,9 +134,53 @@ function CreateProject({ setFormSlide }:any ) {
                         <div>
                             <Label htmlFor="client">Dates</Label>
                             <div className="flex gap-4">
-                                <DatePicker />
-                                <DatePicker />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !startDate && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={startDate}
+                                            onSelect={setStartDate}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !endDate && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={endDate}
+                                            onSelect={setEndDate}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
+                            {formErrors.date && <p className="text-red-500 text-sm">{formErrors.date}</p>}
                         </div>
 
                         <div>

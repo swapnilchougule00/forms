@@ -14,7 +14,7 @@ function ManageProjects({setFormSlide}:any) {
     },[])
 
     const handleBack = () => { localStorage.setItem('Access',access); setFormSlide(3) }
-    const handleNext = () => {localStorage.setItem('Access',access);  setFormSlide(4) }
+    const handleNext = () => {localStorage.setItem('Access',access);  setFormSlide(5) }
     return (
         <div>
             <CardHeader className="w-full text-center font-semibold font-roboto">
