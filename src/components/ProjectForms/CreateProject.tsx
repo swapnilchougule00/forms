@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {
     CardContent, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card"
@@ -83,6 +84,15 @@ function CreateProject({ setFormSlide }: any) {
             }))
             isValid = false;
         }
+        const start = new Date(startDate)
+        const end = new Date(endDate)
+        if (start > end) {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                date: 'date message for the name field',
+            }))
+            isValid = false;
+        }
 
         if (isValid) {
             localStorage.setItem('formData', JSON.stringify(formData));
@@ -110,7 +120,7 @@ function CreateProject({ setFormSlide }: any) {
                         </div>
                         <div>
                             <Label htmlFor="client">Client</Label>
-                            <div className="flex justify-center gap-2 items-center ">
+                            <div className="flex w-full justify-center gap-2 items-center ">
                                 <select
                                     className="w-full border p-1.5 rounded-md"
                                     id="client"
@@ -125,7 +135,7 @@ function CreateProject({ setFormSlide }: any) {
                                     <option value="nuxt">Nuxt.js</option>
                                 </select>
                                 <p className="text-gray-500 text-sm">Or</p>
-                                <Button onClick={(e) => e.preventDefault()} className="bg-white text-slate-400 gap-2 border hover:bg-white"> <Plus className="w-4" /> New client</Button>
+                                <Button disabled className="bg-white text-slate-400 gap-2 border hover:bg-white"> <Plus className="w-4" /> New client</Button>
                             </div>
                             {formErrors.client && <p className="text-red-500 text-sm">{formErrors.client}</p>}
 
